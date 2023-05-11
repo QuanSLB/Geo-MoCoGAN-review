@@ -35,8 +35,9 @@ Model structure
 input includes a content vector ***z<sub>c</sub>*** and a motion vector ***z<sub>m</sub>***, which are given to ```forward''' function in order 
 
 ```python
-   input_content: torch.float64   # B x dim_z_content, on device, e.g., input_content = torch.randn(batch_size, self.dim_z_content, device=device)
-   input_motion: torch.float64    # B x dim_z_motion
+   input_content: torch.float64   # B x dim_z_content x 1 x 1, on device, e.g., input_content = torch.randn(batch_size, self.dim_z_content, 1, 1, device=device)
+   input_motion: torch.float64    # B x dim_z_motion x 1 x 1, on device, e.g., input_content = torch.randn(batch_size, self.dim_z_motion, 1, 1, device=device)
    VideoGenerator.forward(input_content, input_motion)
 ```
 
+### _plot_model()
