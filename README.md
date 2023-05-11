@@ -19,7 +19,6 @@
 Model contains Generator (***G***) and video Discriminator (***D<sub>v</sub>***) and image Discriminator (***D<sub>i</sub>***)
 
 ### *G*:
-Model structure
 ```python
  class VideoGenerator(
    output_size: (Int,Int), # H X W
@@ -35,9 +34,20 @@ Model structure
 input includes a content vector ***z<sub>c</sub>*** and a motion vector ***z<sub>m</sub>***, which are given to ```forward''' function in order 
 
 ```python
-   input_content: torch.float64   # B x dim_z_content x 1 x 1, on device, e.g., input_content = torch.randn(batch_size, self.dim_z_content, 1, 1, device=device)
-   input_motion: torch.float64    # B x dim_z_motion x 1 x 1, on device, e.g., input_content = torch.randn(batch_size, self.dim_z_motion, 1, 1, device=device)
-   VideoGenerator.forward(input_content, input_motion)
+   G = VideoGenerator(...)
+   # to generate images
+   input_content = torch.randn(batch_size, self.dim_z_content, 1, 1, device=device)  # B x dim_z_content x 1 x 1, on device
+   input_motion = torch.randn(batch_size, self.dim_z_motion, 1, 1, device=device)    # B x dim_z_motion x 1 x 1, on device
+   imgs = G(input_content, input_motion)
+   
+   # to generate videos
+   input_content = torch.randn(batch_size, self.dim_z_content, device=device)  # video content
+   input_content = input_content.repeat(frame_len).unsqueeze(-1).unsqueeze(-1) # repeat for each frame
+   
+   
+   input_motion = torch.randn(batch_size, self.dim_z_motion, device=device)  # video motion for each video
+   input_motion = rnn(input_motion)  # use GRU or LSTM to unroll the motions, outputshape:batch_size X frame_len X dim_z_motion X 1 X 1
+   videos = G(input_content, input_motion)
 ```
 Functionals:
 ```python
