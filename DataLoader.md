@@ -70,9 +70,14 @@ graph LR;
             direction TB
             B{cache exists?}
             B -->|Yes| C{{Load CacheDataFile}}
-            B -->|No| AB{{Load RawDataFile}}
-            AB -->  ABC((Select: <br>facies_classification<br>net_to_gross<br>grain_size))
-            ABC-->H[Video DictList]
+            B -->|No| load_raw_data_file
+            subgraph load_raw_data_file
+                direction TB
+                AB{{Load RawDataFile <br> into Dict}}
+                AB -->  ABC{{Select: facies<br>thickness<br>net_to_gross<br>grain_size}}
+                
+            end
+            load_raw_data_file-->H[Video DictList]
         end
 
 
@@ -96,6 +101,8 @@ graph LR;
         ID
         VD
     end
+
+
 ```
 
 
